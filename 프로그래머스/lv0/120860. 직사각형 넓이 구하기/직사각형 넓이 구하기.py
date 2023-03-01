@@ -1,3 +1,2 @@
 def solution(dots):
-    dots.sort()
-    return (dots[1][1]-dots[0][1])*(dots[2][0]-dots[0][0])
+    return (max(dots)[0] - min(dots)[0])*(max(dots)[1] - min(dots)[1])
