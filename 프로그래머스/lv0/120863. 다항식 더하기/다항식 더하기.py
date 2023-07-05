@@ -1,5 +1,4 @@
 def solution(polynomial):
-    answer = ''
     coefficient = 0
     constant = 0
     poly_list = polynomial.split(' + ')
@@ -16,5 +15,3 @@ def solution(polynomial):
         return str(constant)
     else:
         return 'x' if coefficient == 1 else str(coefficient)+'x'
-    
-    return s
