@@ -1,15 +1,7 @@
 def solution(n):
-    lst = []
-    i=1
-    c=1
-    while c<=n:
-        if "3" in str(i):
-            i+=1
-            continue
-        if i%3 == 0:
-            i+=1
-            continue
-        lst.append(i)
-        i+=1
-        c+=1
-    return lst[n-1]
+    answer = 0
+    for _ in range(n):
+        answer += 1
+        while answer % 3 == 0 or '3' in str(answer):
+            answer += 1
+    return answer
