@@ -14,6 +14,8 @@ def solution(distance, rocks, n):
             if rock - pre_stone < mid: del_stones += 1
             else: pre_stone = rock
         
+            if del_stones > n: break
+            
         if del_stones > n:
             end = mid - 1
         else: 
