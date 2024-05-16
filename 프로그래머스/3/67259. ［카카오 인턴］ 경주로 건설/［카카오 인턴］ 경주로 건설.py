@@ -5,9 +5,6 @@ def solution(board):
     
     def bfs(x, y, cost, path):
         visited = [[0]*N for _ in range(N)]
-        for a in range(N):
-            for b in range(N):
-                if board[a][b] == 1: visited[a][b] = -1
     
         queue = deque()
         queue.append((x, y, cost, path))
@@ -19,7 +16,7 @@ def solution(board):
                 nx = x + paths[i][0]
                 ny = y + paths[i][1]
                 
-                if 0<=nx<N and 0<=ny<N and visited[nx][ny]!=-1:
+                if 0<=nx<N and 0<=ny<N and board[nx][ny]!=1:
                     if path == i: newcost = cost + 100
                     else: newcost = cost + 600
                         
