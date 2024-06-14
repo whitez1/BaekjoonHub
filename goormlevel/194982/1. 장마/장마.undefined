@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+# UTF-8 encoding when using korean
+import sys
+input = sys.stdin.readline
+N, M = map(int, input().split())
+k_lst = list(map(int, input().split()))
+
+drain = set()
+for i in range(M):
+	a, b = map(int, input().split())
+	for j in range(a, b+1):
+		k_lst[j-1] += 1
+		drain.add(j)
+	
+	if (i+1)%3==0:
+		for l in drain:
+			k_lst[l-1] -= 1
+		drain = set()	
+print(' '.join(map(str, k_lst)))
