@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+# UTF-8 encoding when using korean
+import sys
+input = sys.stdin.readline
+
+
+N, Q = map(int, input().split())
+answer = [0]*Q
+A = []
+for _ in range(N):
+	a = list(map(int, input().split()))
+	A.append(a)
+	
+for i in range(Q):
+	y1, x1, y2, x2, y3, x3 = map(int, input().split())
+	tri = [[y1, x1],[y2, x2],[y3, x3]]
+	tri = sorted(tri, key = lambda x : (x[0], x[1]))
+	if tri[0][0] == tri[1][0]:
+		if tri[0][1] == tri[2][1]:
+			cnt = tri[1][1]-tri[0][1]
+			for j in range(tri[0][0], tri[2][0]+1):
+				for k in range(tri[0][1], tri[0][1]+cnt+1):
+					answer[i] += A[j-1][k-1]
+				cnt -= 1
+		elif tri[1][1] == tri[2][1]:
+				cnt = 0
+				for j in range(tri[1][0], tri[2][0]+1):
+					for k in range(tri[0][1]+cnt, tri[1][1]+1):
+						answer[i] += A[j-1][k-1]
+					cnt += 1
+	elif tri[1][0] == tri[2][0]:
+		if tri[0][1] == tri[1][1]:
+			cnt = 0
+			for j in range(tri[0][0], tri[1][0]+1):
+				for k in range(tri[0][1], tri[0][1]+cnt+1):
+					answer[i] += A[j-1][k-1]
+				cnt += 1
+		elif tri[0][1] == tri[2][1]:
+				cnt = 0
+				for j in range(tri[0][0], tri[2][0]+1):
+					for k in range(tri[0][1]-cnt, tri[2][1]+1):
+						answer[i] += A[j-1][k-1]
+					cnt += 1								 
+					
+for a in answer:									 
+	print(a)								 
+									 
