@@ -4,14 +4,10 @@ def solution(scoville, K):
     heapq.heapify(scoville)
     
     while True:
-        if len(scoville) == 0:
-            answer = -1
-            break
         x = heapq.heappop(scoville)
         if x >= K: break
         if len(scoville) == 0:
-            answer = -1
-            break 
+            return -1
         y = heapq.heappop(scoville)
         heapq.heappush(scoville, x+y*2)
         answer += 1
