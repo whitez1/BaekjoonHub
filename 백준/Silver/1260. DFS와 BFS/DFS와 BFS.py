@@ -1,35 +1,35 @@
-import sys
+N,M,V = map(int,input().split())
 
-N, M, V = map(int, sys.stdin.readline().rstrip().split())
+#행렬 만들기
 graph = [[0]*(N+1) for _ in range(N+1)]
-for _ in range(M):
-    x, y = map(int, sys.stdin.readline().rstrip().split())
-    graph[x][y] = 1
-    graph[y][x] = 1
-stack = [V]
-d_v = [0]*(N+1)
-queue = [V]
-b_v = [0]*(N+1)
-def dfs():
-    while stack:
-        k = stack.pop()
-        if d_v[k] == 0:
-            print(k, end=' ')
-        d_v[k] = 1
-        for l in range(N, -1, -1):
-            if d_v[l] == 0 and graph[k][l] == 1:
-                stack.append(l)
+for i in range (M):
+    a,b = map(int,input().split())
+    graph[a][b] = graph[b][a] = 1
 
-def bfs():
+#방문 리스트 행렬
+visited1 = [0]*(N+1)
+visited2 = visited1.copy()
+
+#dfs 함수 만들기
+def dfs(V):
+    visited1[V] = 1 #방문처리
+    print(V, end=' ')
+    for i in range(1, N+1):
+        if graph[V][i] == 1 and visited1[i] == 0:
+            dfs(i)
+
+#bfs 함수 만들기
+def bfs(V):
+    queue = [V]
+    visited2[V] = 1 #방문처리
     while queue:
-        k = queue.pop(0)
-        if b_v[k] == 0:
-            print(k, end=' ')
-        b_v[k] = 1
-        for l in range(N + 1):
-            if b_v[l] == 0 and graph[k][l] == 1:
-                queue.append(l)
+        V = queue.pop(0) #방문 노드 제거
+        print(V, end = ' ')
+        for i in range(1, N+1):
+            if(visited2[i] == 0 and graph[V][i] == 1):
+                queue.append(i)
+                visited2[i] = 1 # 방문처리
 
-dfs()
+dfs(V)
 print()
-bfs()
+bfs(V)
