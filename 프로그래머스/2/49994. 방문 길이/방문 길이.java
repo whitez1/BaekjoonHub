@@ -1,55 +1,39 @@
 import java.util.*;
 class Solution {
+    
+    private static boolean isValidMove(int nx, int ny) {
+        return nx >= -5 && nx <= 5 && ny >= -5 && ny <= 5; 
+    }
+    
+    private static final HashMap<Character, int[]> location = new HashMap<>();
+    
+    private static void initLocation() {
+        location.put('U', new int[]{-1, 0});
+        location.put('D', new int[]{1, 0});
+        location.put('R', new int[]{0, 1});
+        location.put('L', new int[]{0, -1});
+    }
+    
     public int solution(String dirs) {
-        int answer = 0;
         
-        int[] dx = {1, -1, 0, 0};
-        int[] dy = {0, 0, 1, -1}; // D U R L
-        
+        initLocation();
         int x = 0, y = 0;
-        int dir_idx = -1;
-        
-        ArrayList<int[]> list = new ArrayList<>();
+        HashSet<String> answer = new HashSet<>();
         
         for (int i=0; i<dirs.length(); i++) {
-            if (dirs.charAt(i) == 'U') {
-                dir_idx = 1;
-            } else if (dirs.charAt(i) == 'D') {
-                dir_idx = 0;
-            } else if (dirs.charAt(i) == 'R') {
-                dir_idx = 2;
-            } else{
-                dir_idx = 3;
-            }
-            int nx = x + dx[dir_idx];
-            int ny = y + dy[dir_idx];
-            boolean isVisited = false;
+            int[] offset = location.get(dirs.charAt(i));
+            int nx = x + offset[0];
+            int ny = y + offset[1];
             
-            if (nx<(-5) || nx>5 || ny<(-5) || ny>5) continue;
+            if (!isValidMove(nx, ny)) continue;
             
-            for (int[] l : list){
-                if (x == l[0] && y == l[1] && nx == l[2] && ny == l[3]) {
-                    isVisited = true;
-                    break;
-                }
-            }
-            
-            if (isVisited) {
-                x = nx;
-                y = ny;
-                continue;
-            }
-            
-            int[] pre1 = {x, y, nx, ny};
-            int[] pre2 = {nx, ny, x, y};
-            list.add(pre1);
-            list.add(pre2);
-            
-            answer += 1;
+            answer.add(x+" "+y+" "+nx+" "+ny);
+            answer.add(nx+" "+ny+" "+x+" "+y);
             
             x = nx;
-            y = ny;
+            y = ny; 
         }
-        return answer;
+             
+        return answer.size() / 2;
     }
 }
