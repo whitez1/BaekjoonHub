@@ -6,13 +6,10 @@ class Solution {
         int[] dx = {1, -1, 0, 0};
         int[] dy = {0, 0, 1, -1}; // D U R L
         
-        int x = 0;
-        int y = 0;
-        int d = -1;
-        int nx, ny;
+        int x = 0, y = 0;
         int dir_idx = -1;
         
-        ArrayList<Integer[]> list = new ArrayList<>();
+        ArrayList<int[]> list = new ArrayList<>();
         
         for (int i=0; i<dirs.length(); i++) {
             if (dirs.charAt(i) == 'U') {
@@ -24,26 +21,27 @@ class Solution {
             } else{
                 dir_idx = 3;
             }
-            nx = x + dx[dir_idx];
-            ny = y + dy[dir_idx];
+            int nx = x + dx[dir_idx];
+            int ny = y + dy[dir_idx];
             boolean isVisited = false;
             
             if (nx<(-5) || nx>5 || ny<(-5) || ny>5) continue;
             
-            
-            for (Integer[] l : list){
+            for (int[] l : list){
                 if (x == l[0] && y == l[1] && nx == l[2] && ny == l[3]) {
                     isVisited = true;
                     break;
                 }
             }
+            
             if (isVisited) {
                 x = nx;
                 y = ny;
                 continue;
             }
-            Integer[] pre1 = {x, y, nx, ny};
-            Integer[] pre2 = {nx, ny, x, y};
+            
+            int[] pre1 = {x, y, nx, ny};
+            int[] pre2 = {nx, ny, x, y};
             list.add(pre1);
             list.add(pre2);
             
@@ -51,7 +49,6 @@ class Solution {
             
             x = nx;
             y = ny;
-           
         }
         return answer;
     }
