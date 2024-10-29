@@ -5,18 +5,13 @@ class Solution
     { 
         Stack<Character> stack = new Stack<>();
         for(char c : s.toCharArray()) {
-            if (!stack.isEmpty()) {
-                if (stack.peek() == c) {
-                    stack.pop();
-                } else {
-                    stack.push(c);
-                }
+            if (!stack.isEmpty() && stack.peek() == c) {
+                stack.pop();
             } else {
                 stack.push(c);
             }
         }
-        int answer = 0;
-        if (stack.isEmpty()) answer = 1;
-        return answer;
+       
+        return stack.isEmpty() ? 1 : 0;
     }
 }
