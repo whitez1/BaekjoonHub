@@ -20,23 +20,16 @@ class Solution {
         Node root = new Node("-", 0, null);
         map.put("-", root);
         
-        for (int i = 0; i<enroll.length; i++) {
+        for (int i = 0; i<enroll.length; i++) { //트리 생성
             Node node = new Node(enroll[i], 0, map.get(referral[i]));
             map.put(enroll[i], node);
         }
         
-        // for (int i = 0; i<enroll.length; i++) { 
-        //     Node node = map.get(enroll[i]);
-        //     node.parent = map.get(referral[i]);
-        // }
-        
         for (int i = 0; i<seller.length; i++) {
-            
             amount[i] *= 100;
             Node node = map.get(seller[i]);
             
             while (node != root) {
-                
                 int share = (int) (amount[i]*0.1);
                 node.proceeds += (amount[i] - share);
                 if (share < 1) break;
