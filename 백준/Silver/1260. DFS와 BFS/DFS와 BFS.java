@@ -3,73 +3,69 @@ import java.util.*;
 
 public class Main {
 
+    
+    private static StringBuilder sb = new StringBuilder();
+    private static int n, m, v;
+    private static int[][] graph;
+    private static boolean[] visited;
+    private static ArrayDeque<Integer> queue = new ArrayDeque<Integer>();
+
     public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         StringTokenizer st1 = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st1.nextToken());
-        int m = Integer.parseInt(st1.nextToken());
-        int v = Integer.parseInt(st1.nextToken());
+        n = Integer.parseInt(st1.nextToken());
+        m = Integer.parseInt(st1.nextToken());
+        v = Integer.parseInt(st1.nextToken());
 
 
-        int[][] graph = new int[n+1][n+1];
+        graph = new int[n+1][n+1];
         for (int i = 0; i < m; i++) {
             StringTokenizer st2 = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st2.nextToken());
             int b = Integer.parseInt(st2.nextToken());
             graph[a][b] = graph[b][a] = 1;
         }
+        visited = new boolean[n+1];
+        dfs(v);
+        sb.append("\n");
 
-        String answer1 = dfs(n, v, graph);
-        String answer2 = bfs(n, v, graph);
-        bw.write(answer1+"\n");
-        bw.write(answer2+"\n");
+        visited = new boolean[n+1];
+        bfs(v);
+
+        bw.write(sb.toString());
         bw.flush();
 
+        br.close();
+        bw.close();
     }
 
-    private static String dfs(int n, int v, int[][] graph) {
-        StringBuilder sb = new StringBuilder();
-        ArrayDeque<Integer> stack = new ArrayDeque<Integer>();
-        int[] visited = new int[n+1];
-        stack.push(v);
-        
-        while(!stack.isEmpty()) {
-            int x = stack.pop();
-            if (visited[x] == 0) {
-                visited[x] = 1;
-                sb.append(x+" ");
+    private static void dfs(int v) {
+        visited[v] = true;
+        sb.append(v+" ");
+        for(int i=1; i<n+1; i++) {
+            if (graph[v][i] == 1 && !visited[i]) {
+                dfs(i);
             }
-      
-            for(int i=n; i>0; i--) {
-                if (graph[x][i] == 1 && visited[i] == 0) {
-                    stack.push(i);
-                }
-            }
-        }
-        return sb.toString().trim();
+        }    
     }
 
-    private static String bfs(int n, int v, int[][] graph) {
-        StringBuilder sb = new StringBuilder();
-        ArrayDeque<Integer> queue = new ArrayDeque<Integer>();
-        int[] visited = new int[n+1];
+    private static void bfs(int v) {
         queue.add(v);
-        visited[v] = 1;
+        visited[v] = true;
         sb.append(v+" ");
         
         while(!queue.isEmpty()) {
             int x = queue.poll();
 
             for(int i=1; i<n+1; i++) {
-                if (graph[x][i] == 1 && visited[i] == 0) {
+                if (graph[x][i] == 1 && !visited[i]) {
                     queue.add(i);
-                    visited[i] = 1;
+                    visited[i] = true;
                     sb.append(i+" ");
                 }
             }
         }
-        return sb.toString().trim();
     }
 }
