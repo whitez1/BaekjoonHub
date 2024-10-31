@@ -54,16 +54,15 @@ public class Main {
     private static void bfs(int v) {
         queue.add(v);
         visited[v] = true;
-        sb.append(v+" ");
         
         while(!queue.isEmpty()) {
             int x = queue.poll();
+            sb.append(x+" ");
 
             for(int i=1; i<n+1; i++) {
                 if (graph[x][i] == 1 && !visited[i]) {
                     queue.add(i);
                     visited[i] = true;
-                    sb.append(i+" ");
                 }
             }
         }
