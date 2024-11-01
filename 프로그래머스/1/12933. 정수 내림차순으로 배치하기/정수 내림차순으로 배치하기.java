@@ -3,15 +3,11 @@ class Solution {
     public long solution(long n) {
         long answer = 0;
         
-        String s = Long.toString(n);
-        String[] arr = new String[s.length()];
+        String[] sarr = String.valueOf(n).split("");
+       
+        Arrays.sort(sarr, Collections.reverseOrder());
         
-        for(int i=0; i<s.length(); i++) {
-            arr[i] = s.charAt(i)+"";
-        }
-        Arrays.sort(arr, Collections.reverseOrder());
-        
-        answer = Long.parseLong(String.join("", arr));
+        answer = Long.parseLong(String.join("", sarr));
         
         return answer;
     }
