@@ -2,22 +2,21 @@ import java.util.*;
 class Solution {
     public String solution(String[] cards1, String[] cards2, String[] goal) {
           
-        Queue<String> q1 = new ArrayDeque<>();
-        Arrays.stream(cards1).forEach(x -> q1.add(x));
+        ArrayDeque<String> cq1 = new ArrayDeque<>(Arrays.asList(cards1));   
+        ArrayDeque<String> cq2 = new ArrayDeque<>(Arrays.asList(cards2));
+        ArrayDeque<String> gq = new ArrayDeque<>(Arrays.asList(goal));
         
-        Queue<String> q2 = new ArrayDeque<>();
-        Arrays.stream(cards2).forEach(x -> q2.add(x));
-        
-        String card1 = q1.poll();
-        String card2 = q2.poll();
-        for (String word : goal) {
-            if (card1.equals(word)) {
-                if (!q1.isEmpty())
-                    card1 = q1.poll();
+       
+    
+        while (!gq.isEmpty()) {
+            
+            if (!cq1.isEmpty() && gq.peekFirst().equals(cq1.peekFirst())) {
+                cq1.pollFirst();
+                gq.pollFirst();
             } 
-            else if (card2.equals(word)) {
-                if (!q2.isEmpty())
-                    card2 = q2.poll();
+            else if (!cq2.isEmpty() && gq.peekFirst().equals(cq2.peekFirst())) {
+                cq2.pollFirst();
+                gq.pollFirst();
             }                
             else {
                 return "No";
@@ -25,7 +24,6 @@ class Solution {
         }
                 
         return "Yes";
-
-        
+  
     }
 }
