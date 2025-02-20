@@ -3,7 +3,7 @@ class Solution {
     int[] Info;
     int maxSum;
     int[] answer;
-    void backtrack(int cnt, int start, int[] lion, int num) {
+    void backtrack(int start, int[] lion, int num) {
         if(num == 0) {
             int sum = 0;
             for(int i = 0; i<Info.length; i++) {
@@ -15,7 +15,7 @@ class Solution {
             }
             if(sum > 0 && sum >= maxSum) {
                 if(sum == maxSum) {
-                    for(int i=Info.length-1; i>=0; i--){
+                    for(int i=10; i>=0; i--){
                         if(lion[i]>answer[i]){
                             answer = Arrays.copyOf(lion, lion.length);
                             break;
@@ -32,15 +32,9 @@ class Solution {
         }
         
         for(int i = start; i<Info.length; i++) {
-            if(num > Info[i]) {
-                lion[i] = Info[i]+1;
-                backtrack(cnt+1, i+1, lion, num-(Info[i]+1));
-                lion[i] = 0;
-            } else if(i==10 && num>0) {
-                lion[i] = num;
-                backtrack(cnt+1, i+1, lion, 0);
-                lion[i] = 0;
-            }
+            lion[i] = Math.min(num, Info[i]+1);
+            backtrack(i+1, lion, num-lion[i]);
+            lion[i] = 0;
         }
     }
     
@@ -48,7 +42,7 @@ class Solution {
         Info = info;
         maxSum = -1;
         answer = new int[]{-1};
-        backtrack(0, 0, new int[info.length], n);
+        backtrack(0, new int[info.length], n);
         return answer;
     }
 }
