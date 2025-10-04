@@ -1,84 +1,82 @@
 import java.util.*;
 
 class Solution {
-    
+
     int n;
     boolean[] visited;
-       
     int[] answer;
-    int maxNumOfWin = -1; 
-    public void numOfCasesAfterRollDice(int p, int[] pickedDice, int[][] dice, PriorityQueue<Integer> pq, int sum){
-        
-        if(p == pickedDice.length) {
-            pq.add(sum);
+    int maxWinCount = -1;
+
+    private void generateSumCases(int depth, int[] selectedDice, int[][] dice, List<Integer> results, int sum) {
+        if (depth == selectedDice.length) {
+            results.add(sum);
             return;
         }
-        
-        for(int i=0; i<6; i++) {
-            numOfCasesAfterRollDice(p+1, pickedDice, dice, pq, sum + dice[pickedDice[p]-1][i]);
+        int diceIdx = selectedDice[depth];
+        for (int face = 0; face < 6; face++) {
+            generateSumCases(depth + 1, selectedDice, dice, results, sum + dice[diceIdx][face]);
         }
     }
-    
-    
-    public void combination(int p, int start, int[] result, int[][] dice) {
-        
-        if(p == n / 2) {
-            Set<Integer> set = new HashSet<>();
-            for(int i=1; i<=n; i++) {
-                set.add(i);
-            }
-            for(int r : result) {
-                set.remove(r);
-            }
-            PriorityQueue<Integer> qa = new PriorityQueue<>();
-            PriorityQueue<Integer> qb = new PriorityQueue<>();
-            int[] bdices = set.stream().mapToInt(Integer::intValue).toArray();
-            
-            numOfCasesAfterRollDice(0, result, dice, qa, 0);
-            numOfCasesAfterRollDice(0, bdices, dice, qb, 0);
-            
-            int pre = 0;
-            int[] csum = new int[501];
-            int x = 0;
-            while(!qb.isEmpty()) {
-                x = qb.poll();
-                if(pre != x) {
-                    for(int i=pre+1; i<=x; i++)
-                        csum[i] += csum[pre];
+
+    private void chooseDiceAndSimulate(int depth, int start, int[] selectedDice, int[][] dice) {
+        if (depth == n / 2) {
+            boolean[] isSelected = new boolean[n];
+            for (int idx : selectedDice) isSelected[idx] = true;
+
+            int[] otherDice = new int[n / 2];
+            int pos = 0;
+            for (int i = 0; i < n; i++) if (!isSelected[i]) otherDice[pos++] = i;
+
+            List<Integer> aSums = new ArrayList<>();
+            List<Integer> bSums = new ArrayList<>();
+            generateSumCases(0, selectedDice, dice, aSums, 0);
+            generateSumCases(0, otherDice, dice, bSums, 0);
+
+            Collections.sort(aSums);
+            Collections.sort(bSums);
+
+            int[] bPrefixWins = new int[501];
+            int prev = -1, count = 0;
+            for (int val : bSums) {
+                if (val != prev) {
+                    for (int i = prev + 1; i <= val && i < bPrefixWins.length; i++) {
+                        bPrefixWins[i] = count;
+                    }
+                    prev = val;
                 }
-                csum[x] += 1;
-                pre = x;
+                count++;
             }
-        
-            int sum = 0;
-            while(!qa.isEmpty()) {
-                int y = qa.poll();
-                if(y-1 > x) sum += csum[x];
-                else sum += csum[y-1];
+            if (prev + 1 < bPrefixWins.length) {
+                Arrays.fill(bPrefixWins, prev + 1, bPrefixWins.length, count);
             }
-               
-            if(sum > maxNumOfWin) {
-                answer = Arrays.copyOf(result, result.length);
-                maxNumOfWin = sum;
+
+            int winCount = 0;
+            for (int val : aSums) {
+                winCount += (val < bPrefixWins.length ? bPrefixWins[val] : bPrefixWins[bPrefixWins.length - 1]);
+            }
+
+            if (winCount > maxWinCount) {
+                maxWinCount = winCount;
+                answer = Arrays.copyOf(selectedDice, selectedDice.length);
             }
             return;
         }
-        
-        for(int i=start; i<n; i++) {
-            if(!visited[i]) {
+
+        for (int i = start; i < n; i++) {
+            if (!visited[i]) {
                 visited[i] = true;
-                result[p] = i+1;
-                combination(p+1, i+1, result, dice);
+                selectedDice[depth] = i;
+                chooseDiceAndSimulate(depth + 1, i + 1, selectedDice, dice);
                 visited[i] = false;
             }
         }
     }
-    
+
     public int[] solution(int[][] dice) {
         n = dice.length;
         visited = new boolean[n];
-        answer = new int[n/2];
-        combination(0, 0, new int[n/2], dice);
-        return answer;
+        answer = new int[n / 2];
+        chooseDiceAndSimulate(0, 0, new int[n / 2], dice);
+        return Arrays.stream(answer).map(i -> i + 1).toArray(); // 1-based index
     }
 }
