@@ -34,18 +34,21 @@ public class Main {
             }
         });
 
-        int cnt = 0;
+        int rank = 0;
         int[] pre = new int[4];
+        int prei = 0;
         int answer = 0;
         for(int i=0; i<N; i++) {
-            if(!(records[i][1] == pre[1] && records[i][2] == pre[2] && records[i][3] == pre[3])) 
-                cnt++;
+            rank = i+1;
+            if((records[i][1] == pre[1] && records[i][2] == pre[2] && records[i][3] == pre[3])) 
+                rank = prei;
             
             if(records[i][0] == K) {
-                answer = cnt;
+                answer = rank;
                 break;
             }
             pre = records[i];
+            prei = rank;
         }
         
         bw.write(answer+"\n");
