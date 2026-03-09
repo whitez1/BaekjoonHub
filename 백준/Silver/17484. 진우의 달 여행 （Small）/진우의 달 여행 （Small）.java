@@ -3,50 +3,63 @@ import java.util.*;
 
 public class Main {
 
-    static int answer = Integer.MAX_VALUE;
-    static int[] dy = {-1,0,1};
+    static int INF = 1_000_000;
 
-    public static void dfs(int[][] arr, int n, int m, int i, int j, int diff, int sum) {
-        if(sum >= answer) return;
-        
-        if(i==n) {
-            answer = Math.min(answer, sum);
-            return;
-        }
-         
-        for(int k=0; k<dy.length; k++) {
-            int nextj = j + dy[k];
-            if (nextj < 0 || nextj >= m) continue;
-            
-            int dir = nextj - j;
-            if(dir == diff) continue;
-            
-            dfs(arr, n, m, i+1, nextj, dir, sum+arr[i][nextj]);
-        }
-    }
-    
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
+
         int[][] arr = new int[N][M];
-        for(int i=0; i<N; i++) {
+
+        for(int i=0;i<N;i++){
             st = new StringTokenizer(br.readLine());
-            for(int j=0; j<M; j++) {
+            for(int j=0;j<M;j++){
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        
-        for(int j=0; j<M; j++) {
-            dfs(arr, N, M, 1, j, -2, arr[0][j]);
+
+        int[][][] dp = new int[N][M][3];
+
+        for(int i=0;i<N;i++)
+            for(int j=0;j<M;j++)
+                Arrays.fill(dp[i][j], INF);
+
+        for(int j=0;j<M;j++){
+            for(int d=0; d<3; d++){
+                dp[0][j][d] = arr[0][j];
+            }
         }
-        
-        bw.write(answer+"\n");
-        bw.flush();
-        bw.close();
-        br.close();
+
+        for(int i=1;i<N;i++){
+            for(int j=0;j<M;j++){
+
+                if(j+1 < M){
+                    dp[i][j][0] = Math.min(dp[i][j][0],
+                        Math.min(dp[i-1][j+1][1], dp[i-1][j+1][2]) + arr[i][j]);
+                }
+
+                dp[i][j][1] = Math.min(dp[i][j][1],
+                    Math.min(dp[i-1][j][0], dp[i-1][j][2]) + arr[i][j]);
+
+                if(j-1 >= 0){
+                    dp[i][j][2] = Math.min(dp[i][j][2],
+                        Math.min(dp[i-1][j-1][0], dp[i-1][j-1][1]) + arr[i][j]);
+                }
+            }
+        }
+
+        int answer = INF;
+
+        for(int j=0;j<M;j++){
+            for(int d=0; d<3; d++){
+                answer = Math.min(answer, dp[N-1][j][d]);
+            }
+        }
+
+        System.out.println(answer);
     }
 }
