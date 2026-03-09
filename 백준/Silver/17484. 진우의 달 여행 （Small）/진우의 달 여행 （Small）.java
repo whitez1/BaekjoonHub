@@ -4,10 +4,11 @@ import java.util.*;
 public class Main {
 
     static int answer = Integer.MAX_VALUE;
+    static int[] dy = {-1,0,1};
 
     public static void dfs(int[][] arr, int n, int m, int i, int j, int diff, int sum) {
-        int dy[] = {-1, 0, 1};
-
+        if(sum >= answer) return;
+        
         if(i==n) {
             answer = Math.min(answer, sum);
             return;
@@ -15,13 +16,12 @@ public class Main {
          
         for(int k=0; k<dy.length; k++) {
             int nextj = j + dy[k];
-            if (nextj < 0 || nextj >= m) {
-                continue;
-            }
-            if(j - nextj == diff) {
-                continue;
-            }
-            dfs(arr, n, m, i+1, nextj, j-nextj, sum+arr[i][nextj]);
+            if (nextj < 0 || nextj >= m) continue;
+            
+            int dir = nextj - j;
+            if(dir == diff) continue;
+            
+            dfs(arr, n, m, i+1, nextj, dir, sum+arr[i][nextj]);
         }
     }
     
